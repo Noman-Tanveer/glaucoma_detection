@@ -1,0 +1,1 @@
+print("Functions serving utility purposes like logging, saving checkpoints, loading checkpoints and handle hyper parameters.")
