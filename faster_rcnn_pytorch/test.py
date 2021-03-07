@@ -1,7 +1,7 @@
 import os
 import torch
 import cv2
-import cPickle
+import _pickle as cPickle
 import numpy as np
 
 from faster_rcnn import network
@@ -132,8 +132,8 @@ def test_net(name, net, imdb, max_per_image=300, thresh=0.05, vis=False):
                     all_boxes[j][i] = all_boxes[j][i][keep, :]
         nms_time = _t['misc'].toc(average=False)
 
-        print 'im_detect: {:d}/{:d} {:.3f}s {:.3f}s' \
-            .format(i + 1, num_images, detect_time, nms_time)
+        print('im_detect: {:d}/{:d} {:.3f}s {:.3f}s' \
+            .format(i + 1, num_images, detect_time, nms_time))
 
         if vis:
             cv2.imshow('test', im2show)
@@ -142,7 +142,7 @@ def test_net(name, net, imdb, max_per_image=300, thresh=0.05, vis=False):
     with open(det_file, 'wb') as f:
         cPickle.dump(all_boxes, f, cPickle.HIGHEST_PROTOCOL)
 
-    print 'Evaluating detections'
+    print ('Evaluating detections')
     imdb.evaluate_detections(all_boxes, output_dir)
 
 
