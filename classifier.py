@@ -2,11 +2,31 @@ print("classifer.py")
 
 import torch
 import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
 from torch.autograd import Variable
 import numpy as np
 
+import cv2
+IMAGE_SIZE = 227
+class GenderAgeClass(Dataset):
+    def __init__(self, df, tfms=None):
+        self.df = df
+        self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], 
+                                              std=[0.229, 0.224, 0.225])
+    def __len__(self): return len(self.df)
+    def __getitem__(self, ix):
+        f = self.df.iloc[ix].squeeze()
+        file = f.file
+        gen = f.gender == 'Female'
+        age = f.age
+        im = cv2.imread(file)
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        return im, age, gen
+
+
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print("Using: ", device)
 
 class Classifier(nn.Module):
     def __init__(self):
@@ -54,6 +74,7 @@ class Classifier(nn.Module):
             x = self.relu(x)
         return x
 
+print(Classifier)
 mynet = Classifier().to(device)
 
 loss_func = nn.MSELoss()
@@ -71,3 +92,9 @@ for _ in range(50):
     loss_value.backward()
     opt.step()
     loss_history.append(loss_value)
+
+save_path = 'mymodel.pth'
+torch.save(model.state_dict(), save_path)
+
+load_path = 'mymodel.pth'
+model.load_state_dict(torch.load(load_path))
