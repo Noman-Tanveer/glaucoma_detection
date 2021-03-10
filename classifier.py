@@ -8,6 +8,12 @@ import numpy as np
 import cv2
 
 IMAGE_SIZE = 227
+
+# Import dataset here and load using data-loader
+
+# Perform transformations onthe dataset if needed
+# confirm if the transformations should be preformed in Dataset class or independently
+
 class GenderAgeClass(Dataset):
     def __init__(self, df, tfms=None):
         self.df = df
